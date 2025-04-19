@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emotion Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('musicwa.jpg'); 
+            background-size: cover;
+            background-position: center;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #fff; 
+        }
+
+        #formContainer {
+            max-width: 500px;
+            margin: 20px auto;
+            background-color: rgba(255, 255, 255, 0.8); 
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        #videoContainer {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #videoContainer img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Emotion Detection System</h1>
+    <div id="formContainer">
+        <form action="{{ url_for('recommend') }}" method="POST">
+            <label for="lang">Language:</label>
+            <input type="text" id="lang" name="lang" placeholder="Enter language...">
+            <label for="singer">Singer:</label>
+            <input type="text" id="singer" name="singer" placeholder="Enter singer...">
+            <button type="submit">Recommend</button>
+        </form>
+    </div>
+
+    <div id="videoContainer">
+        <img src="{{ url_for('video_feed') }}" alt="Video Feed">
+    </div>
+
+    
+
+    <script>
+        // Function to start the video feed
+        function startVideo() {
+            document.getElementById("videoContainer").style.display = "block";
+        }
+
+        // Function to stop the video feed
+        function stopVideo() {
+            fetch("/stop_video")
+                .then(response => response.text())
+                .then(result => {
+                    document.getElementById("videoContainer").style.display = "none";
+                });
+        }
+
+        // Listen for visibility change events
+        document.addEventListener("visibilitychange", function() {
+            if (document.visibilityState === "visible") {
+                startVideo();
+            } else {
+                stopVideo();
+            }
+        });
+
+        // Start the video feed when the page loads
+        window.addEventListener("load", function() {
+            startVideo();
+        });
+    </script>
+</body>
+</html>
